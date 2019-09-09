@@ -32,7 +32,9 @@ class NotesController extends Controller
 
     }
 
-    public function destroy(){
-
+    public function destroy($id){
+        $note = Note::where('id',$id)->first();
+        $note->delete();
+        return parent::response('Note deleted', 201);
     }
 }

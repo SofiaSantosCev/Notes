@@ -1,0 +1,32 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+    color: #000;
+}
+
+body, html {
+    height: calc(100% - 2em);
+    margin: 0;
+}
+
+.wrapper-login {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.wrapper-login > div {
+    text-align: center;
+    height: 100%;
+}
+
+.wrapper-login > input {
+ background: #eee;
+}
+
+.wrapper-login > #div-portada {
+    background: #FFEE7D;
+}
+
+.wrapper-login > #div-portada > h1 {
+    font-size: 80px;
+    margin: auto;
+}
