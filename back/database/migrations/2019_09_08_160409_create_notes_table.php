@@ -14,15 +14,18 @@ class CreateNotesTable extends Migration
     public function up()
     {
         Schema::create('notes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('title',50)->nullable(false);
             $table->string('content')->nullable(true);
-            $table->integer('category_id')->unsigned()->nullable(true);
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('category_id')->references('id')->on('categories');
+            $table->integer('category_id')->unsigned()->nullable(true);
             $table->timestamps();
         });
+        
+        /*Schema::table('notes', function (Blueprint $table){
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('category_id')->references('id')->on('categories');
+        });*/
     }
 
     /**

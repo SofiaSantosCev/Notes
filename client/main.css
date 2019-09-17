@@ -1,32 +1,32 @@
 * {
     font-family: 'Montserrat', sans-serif;
     color: #000;
-}
-
-body, html {
-    height: calc(100% - 2em);
     margin: 0;
-}
-
-.wrapper-login {
-    display: grid;
-    grid-template-columns: 50% 50%;
-}
-
-.wrapper-login > div {
-    text-align: center;
     height: 100%;
 }
-
-.wrapper-login > input {
- background: #eee;
+  /* LOGIN PAGE */
+.wrapper-login {
+    display: flex;
+    flex-direction: row;
 }
 
-.wrapper-login > #div-portada {
+.wrapper-login > .item {
+    width: 50%;
+}
+
+.wrapper-login > #div-frontpage {
     background: #FFEE7D;
 }
 
-.wrapper-login > #div-portada > h1 {
+.wrapper-login > #div-frontpage > h1 {
     font-size: 80px;
     margin: auto;
+    text-align: center;
+}
+
+form {
+    background: red;
+    display: grid;
+    grid-template-columns: 10;
+
 }

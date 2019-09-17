@@ -6,7 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Note extends Model
 {
-    public function Categories(){
+    public function categories(){
         return $this->belongsTo('App\Category');
     }
+
+    public function users()
+    {
+        return $this->belongsTo('App\User');
+    }
+
 }
