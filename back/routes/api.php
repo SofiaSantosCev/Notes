@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResource('note','NotesController');
 Route::apiResource('category', 'CategoryController');
 Route::apiResource('user', 'UserController');
+Route::post('login','UserController@login');
