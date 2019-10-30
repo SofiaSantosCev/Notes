@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use Hash;
 use \Firebase\JWT\JWT;
 use App\Validator;
+use App\User;
+use Hash;
 
 class UserController extends Controller
 {
-    const ID_ROL = 2;
+    const ID_ROLE = 2;
     const TOKEN_KEY = 'bHH2JilqwA3Yx0qwn';
 
     public function store(Request $request)
@@ -28,7 +28,7 @@ class UserController extends Controller
         $user->name = $name;
         $user->email = $email;
         $user->password = password_hash($user->password, PASSWORD_DEFAULT);
-        $user->rol_id = self::ID_ROL;
+        $user->role_id = self::ID_ROLE;
         $user->save();
 
         return parent::response("User created", 200);
@@ -40,16 +40,22 @@ class UserController extends Controller
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        if (Validator::isStringEmpty($email) or Validator::isStringEmpty($password)) {
-            return parent::response("All fields have to be filled",400);
+        if (Validator::isStringEmpty($email) || Validator::isStringEmpty($password)) {
+            return parent::response("All fields have to be filled", 400);
         }
 
-
+        
         $user = User::where('email', $email)->first();
-        $id = $user->id;
-        $rol_id = $user->rol_id;
 
-        if ($user->email == $email and password_verify($password, $user->password))
+        if ($user == null ){
+            return parent::response("This email doesn't belong to any account", 400);
+        }
+
+        $id = $user->id;
+        $role_id = $user->role_id;
+        
+
+        if ($user->email == $email && password_verify($password, $user->password))
         {
             $token = self::generateToken($email, $password);
             
@@ -59,9 +65,8 @@ class UserController extends Controller
                 'role_id' => $role_id
             ]);
         } else {
-            return parent::response("You don't have access",400); 
+            return parent::response("You don't have access", 400); 
         }
-
     }
 
     protected function generateToken($email, $password)
@@ -94,9 +99,10 @@ class UserController extends Controller
         {
             $user = parent::getUserFromToken();
             $user->delete();
+            
             return parent::response('Account deleted successfully.', 200);
         } else {
-            return parent::response('An error ocurred. Please, try later.', 301);
+            return parent::response('You need to login to delete the account.', 301);
         }
     }
 }

@@ -13,7 +13,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected const TOKEN_KEY = 'bHH2JilgwA3YxOqwn';
+    protected const TOKEN_KEY = 'bHH2JilqwA3Yx0qwn';
 
     protected function findUser($email)
     {
@@ -56,19 +56,7 @@ class Controller extends BaseController
         ],$code);
     }
 
-    protected function generateToken($email, $password)
-    {
-        $dataToken = [
-            'email' => $email,
-            'password' => $password,
-            'random' => time()
-        ];
-
-        $token = JWT::encode($dataToken, self::TOKEN_KEY);         
-        return $token;
-    }
-
-    protected function decodeToken() 
+    private static function decodeToken() 
     {
         $headers = getallheaders();
 

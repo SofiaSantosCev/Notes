@@ -10,27 +10,35 @@
 <body>
     <aside>
         <ul style="list-style-type:none;">
-            <li>
-                <h2>Notes</h2>
-                <button><a href="#">new note</a></button>
+            <li id="nav">
+                <p id="title">Notes</p>
+                <a href="#" id="newNoteButton"><img src="assets/add.svg" alt="+"></a>
             </li>
             <li>
                 <a href="#">
-                    <h3>First note</h3>
-                    <p>This is an eample of a note...</p>
+                    <p class="noteName">First note</p>
+                    <p class="notePreview">This is an example of a note...</p>
                 </a>
             </li>
         </ul>
     </aside>
     <main>
-        <form action="#">
-            <div>
-                <input type="text" placeholder="Add a title">
-                <button type="submit"><a href="#"></a></button>
+        <div id="paper">
+            <form action="#">
+                <input type="text" id="inputTitle" placeholder="Add a title">
+                <button id="menu"><img src="assets/menu.svg" alt="..."></button>
                 <textarea>This is a note</textarea>
-            </div>
-            <a href="#" id="delete">delete</a>
-        </form>
+            </form>
+        </div>
     </main>
 </body>
+<script type="text/javascript">
+const url="";
+
+function getNotes() {
+    $.get(url, data, function(){
+
+    })
+}
+</script>
 </html>

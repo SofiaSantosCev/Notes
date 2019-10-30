@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
     protected $fillable = ['password'];
-    public function rol()
+    public function role()
     {
-        return $this->belongsTo('App\Rol');
+        return $this->belongsTo('App\Role');
     }
 }

@@ -14,13 +14,32 @@
         </div>
         <div id="form" class="item">
             <h2>Sign in</h2>
-            <form action="#" method="POST">
-                <input type="text" placeholder="Email">
-                <input type="text" placeholder="Password">
+            <form action="app.html" method="POST">
+                <input type="text" placeholder="Email" id="email">
+                <input type="text" placeholder="Password" id="password">
                 <button type="submit">LOGIN</button>
-                <button>Create account</button>
+                <button onclick="login()">Create account</button>
             </form>
         </div>
     </div>
 </body>
+<script type="text/javascript">
+const url = 'https://localhost/Notes/public/index.php/api/'
+
+function login() {
+    var email = document.getElementById('#email').val();
+    var password = document.getElementById('#password').val();
+
+    data = {
+        email: email,
+        password: password
+    }
+
+    //make post request to url login
+    const Http = new XMLHttpRequest();
+    $.post(url + 'login', data, function(data, status) {
+        console.log(`${data} and status is ${status}`);
+    });
+}
+</script>
 </html>

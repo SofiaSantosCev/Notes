@@ -1,32 +1,93 @@
-* {
-    font-family: 'Montserrat', sans-serif;
-    color: #000;
-    margin: 0;
+html {
     height: 100%;
-}
-  /* LOGIN PAGE */
-.wrapper-login {
-    display: flex;
-    flex-direction: row;
+    margin: 0;
+    font-family: sans-serif;
 }
 
-.wrapper-login > .item {
-    width: 50%;
-}
-
-.wrapper-login > #div-frontpage {
-    background: #FFEE7D;
-}
-
-.wrapper-login > #div-frontpage > h1 {
-    font-size: 80px;
-    margin: auto;
-    text-align: center;
-}
-
-form {
-    background: red;
+body {
+    height: 100%;
+    margin: 0;
     display: grid;
-    grid-template-columns: 10;
+    grid-template-columns: 200px auto;
 
+}
+
+aside {
+    background: #212040;
+    float: left;
+    margin: 0;
+    padding: 0px;
+    height: 100%;
+    color: #fff;
+
+}
+
+aside ul {
+    color: #fff;
+}
+
+main {
+    height: 93%;
+    background: #ececec;
+    margin: 0;
+    padding: 30px;
+}
+
+#paper {
+    background: white;
+    margin: auto;
+    height: 100%;
+    border-radius: 6px;
+    padding: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.noteName {
+    font-size: 14px;
+}
+
+.notePreview {
+    font-size: 12px;
+}
+
+#newNoteButton img {
+    width: 25px;
+    margin: auto;
+}
+
+#menu img {
+    width: 20px;
+}
+
+#title {
+    color: white;
+    font-size: 30px;
+}
+
+#nav {
+    display: grid;
+    grid-template-columns: 70% auto;
+}
+
+button {
+    background: none;
+    border: none;
+}
+
+input {
+    border: none;
+}
+
+#inputTitle {
+     height: 30px;
+     margin-top: 40px;
+     margin-left: 20px;
+}
+#inputTitle::placeholder {
+    font-size: 24px;
+    color: black;
 }
