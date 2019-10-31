@@ -18,6 +18,13 @@ class NotesController extends Controller
         $user_id = $user->id; 
 
         $notes = Note::where('user_id', $user_id)->get();
+
+        if(empty($notes)) {
+            return parent::response('No notes created yet', 400);
+        }
+        return response()->json([
+            'notes'=> $notes,
+        ], 200);
     }
 
     public function store(Request $request){

@@ -30,16 +30,25 @@ function login() {
     var email = document.getElementById('#email').val();
     var password = document.getElementById('#password').val();
 
-    data = {
+    let data = {
         email: email,
         password: password
     }
 
-    //make post request to url login
-    const Http = new XMLHttpRequest();
-    $.post(url + 'login', data, function(data, status) {
-        console.log(`${data} and status is ${status}`);
+    let fetchData = {
+        method: 'POST',
+        body: data
+    }
+
+    fetch(url + 'login', fetchData)
+    .then(function(response){
+        console.log(response.token);
+        var token = response.token;
+        sessionStorage.setItem("token", token);
+       //window.location= 'app.html'; 
     });
+    //make post request to url login
+    
 }
 </script>
 </html>
