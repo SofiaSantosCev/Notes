@@ -1,15 +1,3 @@
-html {
-    height: 100%;
-    margin: 0;
-    font-family:'Open Source', sans-serif;
-}
-
-body {
-    height: 90%;
-    margin: 0;
-    background: #212040;
-}
-
 #wrapper {
     display: grid;
     grid-template-columns: 250px auto;
@@ -34,18 +22,7 @@ main {
     padding: 30px;
 }
 
-a {
-    text-decoration: none;
-}
 
-button {
-    background: none;
-    border: none;
-}
-
-input {
-    border: none;
-}
 
 textarea {
     font-family: 'Roboto';
@@ -62,9 +39,7 @@ textarea:focus, input:focus {
     outline: none;
 }
 
-ul {
-    list-style-type: none;
-}
+
 
 #newNoteButton img {
     width: 30px;

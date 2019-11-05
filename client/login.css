@@ -1,0 +1,63 @@
+
+body {
+    display: grid;
+    grid-template-columns: 50% auto;
+    color: white;
+    text-align: center;
+}
+
+input, button {
+    width: 100%;
+    padding: 5px 15px;
+    margin: 8px 0;
+    height: 35px;
+    border-radius: 4px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+h2 {
+    font-size: 30px;
+    font-family: 'Raleway', sans-serif !important;
+    font-weight: 700;
+}
+
+form {
+    margin-top: 50%;
+    margin-left: 50%;
+    width: 30%;
+    height: 50%;
+    transform: translate(-50%, -50%);
+}
+
+button[type=button] {
+    background: #F27983;
+    width: 100px;
+}
+
+button[type=button]:hover {
+    background: #d16870;
+}
+
+button, button a {
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+button a:hover {
+    color: #F2B366;
+}
+
+#signUpForm, #signInForm, .onTop {
+    height: 100%;
+    text-align: center;
+    border: #F2B366;
+}
+
+.onTop {
+    z-index: 9;
+}
+
+div.onTop {
+    background: #F2B366;
+}

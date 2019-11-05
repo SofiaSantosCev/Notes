@@ -4,31 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="common.css">
     <title>LOGIN | Notes</title>
 </head>
 <body>
-    <div class="wrapper-login">
-        <div class="item" id="div-frontpage">
-            <h1>Notes . </h1>
-        </div>
-        <div id="form" class="item">
-            <h2>Sign in</h2>
-            <form action="app.html" method="POST">
-                <input type="text" placeholder="Email" id="email">
-                <input type="text" placeholder="Password" id="password">
-                <button type="submit">LOGIN</button>
-                <button onclick="login()">Create account</button>
-            </form>
-        </div>
+    <div id="signUpForm" class="form">
+        <form>
+            <h2>Sign Up</h2>
+            <input type="text" placeholder="Name" id="signUpName">
+            <input type="text" placeholder="Email" id="signUpEmail">
+            <input type="password" placeholder="Password" id="signUpPass" >
+            <button type="button" onclick="signUp()">Sign up</button>
+            <button><a>Sing in your account</a></button>
+        </form>
     </div>
+    <div id="signInForm" class="form">
+        <form>
+            <h2>Sign in</h2>
+            <input type="text" placeholder="Email" id="signInEmail">
+            <input type="password" placeholder="Password" id="signInPass">
+            <button type="button" onclick="signIn()">Sign in</button>
+            <button><a>Create an account</a></button>
+        </form>
+    </div>
+        
 </body>
 <script type="text/javascript">
+
 const url = 'https://localhost/Notes/public/index.php/api/'
 
-function login() {
-    var email = document.getElementById('#email').val();
-    var password = document.getElementById('#password').val();
+var form = document.getElementsByTagName('form');
+
+function signUp() {
+
+    var name = document.getElementById('signUpName').value;
+    var email = document.getElementById('signUpEmail').value;
+    var pass = document.getElementById('signUpPass').value;
+
+    let data = {
+        name: name,
+        email: email,
+        password: pass,
+    }
+
+    let fetchData = {
+        method: 'POST',
+        body: data,
+    }
+
+    fetch(url + 'user', fetchData)
+    .then(function(response) {
+        console.log(response);
+    })
+    .catch(function(error) {
+        console.log(error);
+    })
+}
+
+function signIn() {
+    var email = document.getElementById('signInEmail').value;
+    var password = document.getElementById('signInPass').value;
+
 
     let data = {
         email: email,
@@ -41,13 +78,17 @@ function login() {
     }
 
     fetch(url + 'login', fetchData)
-    .then(function(response){
+    .then(function(response) {
+        //stopDefAction(form);
         console.log(response.token);
         var token = response.token;
         sessionStorage.setItem("token", token);
        //window.location= 'app.html'; 
+    })
+    .catch(function (error) {
+        //stopDefAction(form);
+        console.log(error);
     });
-    //make post request to url login
     
 }
 </script>
