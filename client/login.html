@@ -5,91 +5,138 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="login.css">
-    <link rel="stylesheet" href="common.css">
-    <title>LOGIN | Notes</title>
+    <title>Login | Notes</title>
 </head>
 <body>
-    <div id="signUpForm" class="form">
-        <form>
-            <h2>Sign Up</h2>
-            <input type="text" placeholder="Name" id="signUpName">
-            <input type="text" placeholder="Email" id="signUpEmail">
-            <input type="password" placeholder="Password" id="signUpPass" >
-            <button type="button" onclick="signUp()">Sign up</button>
-            <button><a>Sing in your account</a></button>
-        </form>
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form action="app.html">
+                <h2>Create Account</h2>
+                <input type="text" placeholder="Name" id="signUpName">
+                <input type="text" placeholder="Email" id="signUpEmail">
+                <input type="password" placeholder="Password" id="signUpPass">
+                <button type="button" id="submitSignUp">Sign up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form action="app.html">
+                <h2>Sign in</h2>
+                <input type="text" placeholder="Email" id="signInEmail" name="email">
+                <input type="password" placeholder="Password" id="signInPass" name="password">
+                <a>Forgot your password?</a>
+                <button type="button" id="submitSignIn" >Sign in</button>
+            </form>
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1 id="title">Notes</h1>
+                    <h1>Hello friend!</h1>
+                    <p>Enter your personal details to start the journey with us</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1 id="title">Notes</h1>
+                    <h1>Welcome back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="signInForm" class="form">
-        <form>
-            <h2>Sign in</h2>
-            <input type="text" placeholder="Email" id="signInEmail">
-            <input type="password" placeholder="Password" id="signInPass">
-            <button type="button" onclick="signIn()">Sign in</button>
-            <button><a>Create an account</a></button>
-        </form>
-    </div>
-        
 </body>
 <script type="text/javascript">
 
-const url = 'https://localhost/Notes/public/index.php/api/'
+// Buttons to change view
+const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+const container = document.getElementById('container');
 
-var form = document.getElementsByTagName('form');
+// Buttons submit form
+const submitSingIn = document.getElementById('submitSignIn');
+const submitSignUp = document.getElementById('submitSignUp');
 
-function signUp() {
+const url = 'http://127.0.0.1/Notes/back-restart/public/index.php/api/'
 
+const sendHttpRequest = (method, url, data) => {
+    const promise = new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.responseType = 'json';
+
+        if (data) {
+            xhr.setRequestHeader('Access-Control-Allow-Origin', '*')
+            xhr.setRequestHeader('Content-Type', 'application/json');
+        }
+
+        xhr.onload = () => {
+            if (xhr.status >= 400) {
+                reject(xhr.response);
+            } else {
+                resolve(xhr.response);
+            }
+        };
+
+        xhr.onerror = () => {
+            reject('Something went wrong!');
+        };
+
+        xhr.send(JSON.stringify(data));
+    });
+    return promise;
+};
+
+const signIn = () => {
+    var email = document.getElementById('signInEmail').value;
+    var pass = document.getElementById('signInPass').value;
+
+    sendHttpRequest('POST', url + 'login', {
+        email: email,
+        password: pass
+    })
+    .then(responseData => {
+        console.log(responseData['token']);
+        localStorage.setItem("token", responseData['token']);
+        window.location.href = 'app.html';
+    })
+    .catch(err => {
+        console.log(err);
+    });
+};
+
+const signUp = () => {
     var name = document.getElementById('signUpName').value;
     var email = document.getElementById('signUpEmail').value;
     var pass = document.getElementById('signUpPass').value;
 
-    let data = {
+    sendHttpRequest('POST', url + 'signup', {
         name: name,
         email: email,
-        password: pass,
-    }
-
-    let fetchData = {
-        method: 'POST',
-        body: data,
-    }
-
-    fetch(url + 'user', fetchData)
-    .then(function(response) {
-        console.log(response);
+        password: pass
     })
-    .catch(function(error) {
-        console.log(error);
+    .then(responseData => {
+        console.log(responseData);
+        localStorage.setItem("token", responseData['token']);
+        if(localStorage.getItem("token") == responseData['token']){
+            window.location.href = 'app.html';
+        }
     })
-}
-
-function signIn() {
-    var email = document.getElementById('signInEmail').value;
-    var password = document.getElementById('signInPass').value;
-
-
-    let data = {
-        email: email,
-        password: password
-    }
-
-    let fetchData = {
-        method: 'POST',
-        body: data
-    }
-
-    fetch(url + 'login', fetchData)
-    .then(function(response) {
-        //stopDefAction(form);
-        console.log(response.token);
-        var token = response.token;
-        sessionStorage.setItem("token", token);
-       //window.location= 'app.html'; 
-    })
-    .catch(function (error) {
-        //stopDefAction(form);
-        console.log(error);
+    .catch(err => {
+        console.log(err);
     });
-    
-}
+};
+
+signUpButton.addEventListener('click', () =>
+    container.classList.add('right-panel-active')
+);
+
+signInButton.addEventListener('click', () =>
+    container.classList.remove('right-panel-active')
+);
+
+submitSignIn.addEventListener('click', signIn);
+submitSignUp.addEventListener('click', signUp);
+
 </script>
 </html>

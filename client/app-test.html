@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="app.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="common.css" type="text/css">
+    <link href="app-test.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+    <header class="header container">
+        <img id="logo" src="assets/brain-white.svg" alt="logo">
+        <button id="logOut" href="login.html" onclick="logOut()">Log out</button>
+    </header>
+    <main class="content">
+        <aside class="sidebar container">
+            <ul id="notesList">
+                <!-- dynamic list -->
+            </ul>
+        </aside>
+        <section class="main container">
+            <div id="paper">
+                <a id="menu"><img src="assets/menu.svg" alt="..."></a>
+                <form>
+                    <input type="text" id="inputTitle" placeholder="Add a title" onfocus="this.placeholder = ''"
+                        onblur="this.placeholder = 'Add a title'">
+                    <textarea id="content" placeholder="Start writing here" onfocus="this.placeholder = ''"
+                        onblur="this.placeholder = 'Start writing here'"></textarea>
+                </form>
+                <button id="save">Save</button>
+            </div>
+        </section>
+    </main>
+    <footer class="footer container">Footer</footer>
+</body>
+</html>

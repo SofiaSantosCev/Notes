@@ -10,66 +10,36 @@
 </head>
 <body>
     <nav>
-        <p id="title">Notes</p>
-        <button>Log out</button>
+        <div>
+            <p id="title">Notes</p>
+            <img id="logo" src="assets/brain-white.svg" alt="logo">
+        </div>
+        <div>
+            <button id="logOut" href="login.html">Log out</button>
+        </div>
     </nav>
-    <!-- ******************** SIDE BAR -->
+   
     <div id="wrapper">
         <aside>
             <div id="nav">
                 <a href="#" id="newNoteButton"><img src="assets/add.svg" alt="+"></a>
             </div>
             <ul id="notesList">
-                <li id="#item">
-                    <a href="#" id="#itema">
-                        <p class="noteName">First note</p>
-                        <p class="notePreview">This is an example of a note...</p>
-                    </a>
-                </li>
+                <!-- dynamic list -->
             </ul>
         </aside>
-        <!-- ******************** PAPER ZONE -->
+        
         <main>
             <div id="paper">
                 <button id="menu"><img src="assets/menu.svg" alt="..."></button>
-                <form action="#">
-                    <input type="text" id="inputTitle" placeholder="Add a title" onfocus="this.placeholder=''" onblur="this.placeholder= 'Add a title'">
-                    <textarea placeholder="Start writing here" onfocus="this.placeholder=''" onblur="this.placeholder= 'Start writing here'"></textarea>
+                <form>
+                    <input type = "text" id = "inputTitle" placeholder = "Add a title" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Add a title'">
+                    <textarea id = "content" placeholder = "Start writing here" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Start writing here'"></textarea>
                 </form>
                 <button id="save">Save</button>
             </div>
         </main>
     </div>
 </body>
-<script type="text/javascript">
-
-    const url= "https://localhost/Notes/back/public/index.php/api/";
-    var token = sessionStorage.getItem(token);
-
-    window.onload = function loaded() {
-
-        let fetchData = {
-            method: 'GET',
-            headers: {
-                Authentication: token
-            }
-        }
-
-        console.log("token" + token);
-        fetch(url + 'notes', { Authentication: token })
-        .then((resp)=>resp.json())
-        .then(function(data){
-            console.log(data.notes);
-        }).catch(function(error){
-            console.log(error);
-        });
-    }
-
-    /*function showNotes(notes) {
-        for (var note in nores) {
-            $('#notesList').append('<li><a href =' + # + '>< p class= "noteName" >'+ First note + '</p><p class="notePreview">' + This is an example of a note + '</p></a></li >');
-        }
-    }*/
-
-</script>
+<script src="app.js>"></script>
 </html>

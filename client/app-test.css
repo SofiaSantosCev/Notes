@@ -1,0 +1,122 @@
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.container {
+    padding: .5rem;
+}
+.header {
+    float: left;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+#logo {
+    float: left;
+    flex-shrink:0;
+    margin:0;
+    width: 2rem;
+}
+
+.header, .footer {
+    height: 2.5rem;
+    color: white;
+    background: #18172e;
+}
+
+.content {
+    display: flex;
+    flex: 1;
+    color: #000;
+}
+
+.main {
+    flex: 1;
+}
+.sidebar {
+    width: 10rem;
+}
+
+#menu img {
+    width: 20px;
+}
+
+#menu {
+    margin-right: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 30px;
+}
+
+#paper {
+    background: white;
+    padding: 50px;
+    position: relative;
+    height: 80vh;
+    box-shadow:  0px 0px 20px 2px rgba(0,0,0,1);
+}
+
+#paper form {
+    position: relative;
+}
+
+#inputTitle {
+    height: 30px;
+    margin-top: 40px;
+    position: absolute;
+    top: 0;
+    font-size: 30px;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+}
+
+#inputTitle::placeholder {
+    font-size: 30px;
+    color:#afafaf;
+}
+
+#save {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    border: none;
+    background: #d32f58;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+textarea {
+    font-family: 'Roboto';
+    font-size: 14px;
+    border: none;
+    height: 60vh; 
+    width: 100%;
+    margin-top: 120px;
+    position: absolute;
+    resize: none;
+}
+
+textarea:focus, input:focus {
+    outline: none;
+}
+
+.noteName {
+    font-size: 14px;
+    color: #fff;
+}
+
+.notePreview {
+    font-size: 12px;
+    color: #afafaf;
+}
