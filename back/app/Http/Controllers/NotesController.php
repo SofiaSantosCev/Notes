@@ -11,7 +11,7 @@ class NotesController extends Controller
     public function index(){
         if(!parent::checkLogin()) 
         {
-            return parent::response('Ha ocurrido un error con su sesión.', 301);
+            return parent::response('You are not logged in', 301);
         } 
         
         $user = parent::getUserFromToken();
@@ -22,6 +22,7 @@ class NotesController extends Controller
         if(empty($notes)) {
             return parent::response('No notes created yet', 400);
         }
+        
         return response()->json([
             'notes'=> $notes,
         ], 200);
@@ -35,9 +36,9 @@ class NotesController extends Controller
         }
         
         $user = parent::getUserFromToken();
-        $title = $request['title'];
-        $content = $request['content'];
-        $category_id = $request['category_id'];
+        $title = $request->input('title');
+        $content = $request->input('content');
+        $category_id = $request->input('category_id');
 
         if($category_id == "none")
         {

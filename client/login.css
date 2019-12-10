@@ -123,7 +123,7 @@ button.ghost {
 
 .overlay {
     background: #F2B366;
-    background: linear-gradient(to right, #F27983, rgb(255, 93, 106)) no-repeat 0 0 / cover;
+    background: linear-gradient(to left, #F27983, #A784D9) no-repeat 0 0 / cover;
     color: white;
     position: relative;
     left: -100%;
@@ -187,4 +187,20 @@ button.ghost {
 
 .container.container.right-panel-active .overlay-right {
     transform: translateX(20%);
+}
+
+div#error {
+    color: red;
+}
+
+p#error {
+    color: red;
+}
+
+.title {
+    font-size: 3rem !important;
+}
+
+.logo {
+    width: 4rem;
 }

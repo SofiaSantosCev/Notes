@@ -12,12 +12,21 @@ class UserController extends Controller
 {
     const ID_ROLE = 2;
     const TOKEN_KEY = 'bHH2JilqwA3Yx0qwn';
+    
+
+    public function index() {
+        
+    }
 
     public function store(Request $request)
     {
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        if(!isset($name) && !isset($email) && !isset($password)) {
+            return parent::response('Input information wrong', 400);
+        }
 
         if(self::isEmailInUse($email))
         {
@@ -25,25 +34,36 @@ class UserController extends Controller
         }
 
         $user = new User;
+        
         $user->name = $name;
         $user->email = $email;
-        $user->password = password_hash($user->password, PASSWORD_DEFAULT);
+        $user->password = password_hash($password, PASSWORD_DEFAULT);
         $user->role_id = self::ID_ROLE;
+        
         $user->save();
-
-        return parent::response("User created", 200);
+        
+        $user = User::where('email', $email)->first();  
+        $id = $user->id;
+        $role_id = $user->role_id;
+        $token = self::generateToken($email, $password);
+        
+        return response()->json([
+            'token' => $token,
+            'user_id'=> $id, 
+            'role_id' => $role_id,
+            'email' => $email
+        ]);
     }
 
     // User login
-    public function login()
-    {
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+    public function login(Request $request)
+    {   
+        $email = $request->input('email');
+        $password = $request->input('password');
 
         if (Validator::isStringEmpty($email) || Validator::isStringEmpty($password)) {
             return parent::response("All fields have to be filled", 400);
         }
-
         
         $user = User::where('email', $email)->first();
 
@@ -54,18 +74,18 @@ class UserController extends Controller
         $id = $user->id;
         $role_id = $user->role_id;
         
-
         if ($user->email == $email && password_verify($password, $user->password))
         {
             $token = self::generateToken($email, $password);
-            
+
             return response()->json([
                 'token' => $token,
                 'user_id'=> $id, 
-                'role_id' => $role_id
+                'role_id' => $role_id,
+                'email' => $email
             ]);
         } else {
-            return parent::response("You don't have access", 400); 
+            return parent::response("Wrong password or email", 400);
         }
     }
 

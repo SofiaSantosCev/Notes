@@ -1,25 +1,9 @@
-#wrapper {
-    display: grid;
-    grid-template-columns: 250px auto;
-}
 
-nav {
-    width: 100%;
-    height: 50px;
-    
-}
-
-aside {
-    float: left;
-    margin: 0;
-    color: #fff;
-    position: relative;
-}
-
-main {
-    background: #212040;
-    margin: 0;
-    padding: 30px;
+/* GENERAL STYLES */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 textarea {
@@ -33,49 +17,203 @@ textarea {
     resize: none;
 }
 
-textarea:focus, input:focus {
-    outline: none;
+textarea:focus, input:focus { 
+    outline: none; 
 }
 
-#newNoteButton img {
-    width: 30px;
-    position: absolute;
-    top: 50px;
-    right: 30px;
+aside {
+    color: #fff;
 }
 
-#title {
-    color: white;
+input {
+    padding: 5px;
+    border-radius: 3px;
+    width: 90%;
+}
+
+button, select {
+    cursor: pointer;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #212040; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #18172e; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2f2d5a; 
+}
+
+.container { 
+    padding: .5rem; 
+}
+
+.header { 
+    float: left; 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    overflow: hidden;
+}
+
+.header, .footer {
+    height: 2.5rem;
+    color: #fff;
+    background: #18172e;
+}
+
+.content {
+    display: flex;
+    flex: 1;
+    color: #000;
+}
+
+.main { 
+    flex: 1; 
+}
+
+/* SIDE BAR STYLES*/
+.sidebar { 
+    width: 13rem; 
+}
+
+.noteName, #categoriesList li {
     font-size: 14px;
+    color: #fff;
 }
 
-#notesList {
-    position: absolute;
-    margin-top: 100px;
+.notePreview {
+    font-size: 12px;
+    color: #afafaf;
 }
 
-#menu img {
+#paperMenu.dropbtn {
+    background-image: url(assets/menu.svg);
+}
+
+.dropbtnList, .dropbtn {
+    background-image: url(assets/menu-white.svg);
+    height: 20px;
     width: 20px;
 }
 
-#menu {
-    margin-right: 20px;
+#paperDrop.dropdown {
+    display: inline-block;
     position: absolute;
     right: 0;
     top: 0;
+    margin-right: 20px;
     margin-top: 30px;
 }
 
-#paper {
-    background: white;
-    padding: 50px;
+.dropdown {
     position: relative;
-    height: 84vh;
-    box-shadow:  0px 0px 20px 2px rgba(0,0,0,1);
+    display: inline-block;
 }
 
-#paper form {
+.dropdownContent {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    transform: translate(-150px);
+}
+
+.dropdownContent a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.show {
+    display: block;
+}
+
+div.headerList {
+    min-height: 20px;
+    height: auto;
+}
+
+div.headerList::after {
+    display: table;
+    clear: both;
+    height: 100px;
+}
+
+.headerList h4, .headerList div  {
+    clear: none;
+    float: left;
+    height: 100%;
+    margin: 0;
+}
+
+.headerList h4 {
+    width: 75%;
+}
+
+.headerList div button {
+    background-image: url('assets/add.svg');
+    width: 20px;
+    height: 20px;
+    top: 10px;
+}
+
+.sidebarList {
+    max-height: 300px;
+    overflow: hidden;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+#notesList li {
+    min-height: 50px;
+    padding: 2px;
+}
+
+#notesList li a:hover {
+    background: #100f1f;
+}
+
+#notesList li a {
+    float: left;
+    width: 80%;
+    min-height: 50px;
+    padding: 2px;
+}
+
+#logo {
+    float: left;
+    flex-shrink: 0;
+    margin: 0;
+    left: 10px;
+    width: 2rem;
+}
+
+/* MAIN SECTION */
+#paper {
+    background: #fff;
+    padding: 50px;
     position: relative;
+    height: 75vh;
+    box-shadow: 0px 0px 20px 2px rgba(0,0,0,1);
+}
+
+#paper form { 
+    position: relative; 
 }
 
 #inputTitle {
@@ -91,35 +229,42 @@ textarea:focus, input:focus {
 
 #inputTitle::placeholder {
     font-size: 30px;
-    color:#afafaf;
-}
-
-#save {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    margin-right: 20px;
-    margin-bottom: 20px;
-}
-
-#item:hover {
-    background: black;
-}
-
-.container {
-    padding: 1rem;
-}
-
-.noteName {
-    font-size: 14px;
-    color: #fff;
-}
-
-.notePreview {
-    font-size: 12px;
     color: #afafaf;
 }
 
-#logo {
-    width: 1rem;
+#save {
+    border: none;
+    background: #d32f58;
+    color: #fff;
+    margin-right: 20px;
 }
+
+button#save:hover {
+    box-shadow:0px 0px 7px 5px rgba(211, 47, 88, 0.25);
+}
+
+button#logOut {
+    color: #fff;
+}
+
+#save, #selectCat {
+    position: absolute;
+    padding: 5px 10px;
+    border-radius: 5px;
+    right: 0;
+    bottom: 0;
+    margin-bottom: 20px;
+    height: 30px;
+}
+
+select#selectCat {
+    margin-right: 100px;
+}
+
+#user {
+    font-size: .9rem;
+}
+
+
+
+

@@ -17,7 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('note','NotesController');
-Route::apiResource('category', 'CategoryController');
-Route::apiResource('user', 'UserController');
-Route::post('login','UserController@login');
+Route::group(['middleware' => 'cors'], function() {
+    Route::apiResource('note','NotesController');
+    Route::apiResource('category', 'CategoryController');
+    Route::delete('deleteUser', 'UserController@destroy');
+    Route::post('login','UserController@login');
+    Route::post('signup', 'UserController');
+});

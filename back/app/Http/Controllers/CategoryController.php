@@ -14,8 +14,10 @@ class CategoryController extends Controller
         {
             return parent::response('Ha ocurrido un error con su sesión.', 301);
         }
+
         $user = parent::getUserFromToken();
-        $user_id = $user->id;       
+        $user_id = $user->id;  
+
         if (self::isCategoriesEmpty($user_id)) 
         {  
             return parent::response('Aun no tienes categorias.', 400);
@@ -25,15 +27,17 @@ class CategoryController extends Controller
         
         $categoryNames = [];
         $categoryIDs = [];
+
         foreach ($categories as &$category) 
         {   
-            array_push($categoryNames, $category->name);
+            array_push($categoryNames, $category->title);
             array_push($categoryIDs, $category->id);
         }
+
         return response()->json ([
-                'categories' => $categoryNames,
-                'IDs' => $categoryIDs
-            ],200);
+            'title' => $categoryNames,
+            'IDs' => $categoryIDs
+        ],200);
     }
 
     private function isCategoriesEmpty($userId)
@@ -48,14 +52,14 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        /*if(parent::checkLogin() == false) 
+        if(!parent::checkLogin()) 
         {
             return response("No permissions", 301);
-        } */      
+        } 
 
-        //$user = parent::getUserFromToken();
-        $title = $_POST['title'];
-        //$user_id = $user->id;
+        $user = parent::getUserFromToken();
+        $title = $request->input('title');
+        $user_id = $user->id;
 
         if (Validator::isStringEmpty($title)) 
         {
@@ -70,10 +74,10 @@ class CategoryController extends Controller
             return parent::response('Nombre demasiado largo.', 400);
         }
 
-        /*if (self::isCategoryNameInUse($title, $user->id)) 
+        if (self::isCategoryNameInUse($title, $user->id)) 
         {
             return parent::response('Esta categoria ya existe.', 400);
-        }*/
+        }
         
         $category = new category;
         $category->title = $title;

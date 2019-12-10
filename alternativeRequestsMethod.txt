@@ -1,0 +1,56 @@
+
+/*function signUp() {
+    var name = document.getElementById('signUpName').value;
+    var email = document.getElementById('signUpEmail').value;
+    var pass = document.getElementById('signUpPass').value;
+
+    let data = {
+        name: name,
+        email: email,
+        password: pass,
+    }
+
+    let fetchData = {
+        method: 'POST',
+        body: data,
+        headers: 'Access- Control - Allow - Origin : *',
+    }
+
+    fetch(url + 'signup', fetchData)
+    .then(function (response) {
+        console.log(response);
+    })
+    .catch(function (error) {
+        console.log(data);
+        console.log(error);
+    })
+}
+
+ 
+function signIn() {
+
+    var email = document.getElementById('signInEmail').value;
+    var pass = document.getElementById('signInPass').value;
+
+    let data = {
+        email: email,
+        password: pass
+    }
+
+    let fetchData = {
+        method: 'POST',
+        body: data,
+        headers: { 'Access - Control - Allow - Origin' : '*'},
+    }
+
+    fetch(url + 'login', fetchData)
+    .then(function (response) {
+        console.log(response.token);
+        var token = response.token;
+        sessionStorage.setItem("token", token);
+    })
+    .catch(function (error) {
+        console.log("Error while login");
+        console.log(error);
+    });
+}*/

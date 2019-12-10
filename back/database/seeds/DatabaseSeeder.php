@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         DB::table('users')->insert([
         	'name' => 'admin',
-        	'emaphp il' => 'admin@mail.com',
+        	'email' => 'admin@mail.com',
         	'role_id' => 1,
         	'password' => password_hash(12345678, PASSWORD_DEFAULT),
         ]);

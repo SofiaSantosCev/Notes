@@ -4,35 +4,275 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="app.js" type="text/javascript"></script>
+    <title>Notes</title>
     <link rel="stylesheet" href="common.css" type="text/css">
+    <link rel="icon" type="image/png" href="assets/brain-white.svg">
     <link href="app-test.css" type="text/css" rel="stylesheet"></link>
 </head>
 <body>
     <header class="header container">
-        <img id="logo" src="assets/brain-white.svg" alt="logo">
+        <img id="logo" src="assets/brain-white.svg" alt="logo" >
         <button id="logOut" href="login.html" onclick="logOut()">Log out</button>
     </header>
     <main class="content">
         <aside class="sidebar container">
-            <ul id="notesList">
-                <!-- dynamic list -->
-            </ul>
+            <p id="user"></p>
+            <div id="notesSection">
+                <div class="headerList">
+                    <h4>Your notes</h4>
+                    <div>
+                        <button id="addNote" class="addBtn"></button>
+                    </div>
+                </div>
+                <select name="selectCatList" class="selectCat" id="selectCatList"></select>
+                <ul id="notesList" class="sidebarList">
+                    <!-- dynamic list -->
+                </ul>
+            </div>
+            <div id="categoriesSection">
+                <div class="headerList">
+                    <h4>Create a new category</h4>
+                    <div>
+                        <button id="addCat" class="addBtn"></button>
+                    </div>
+                </div>
+                <ul id="categoriesList" class="sidebarList">
+            
+                </ul>
+            </div>
+            
         </aside>
         <section class="main container">
             <div id="paper">
-                <a id="menu"><img src="assets/menu.svg" alt="..."></a>
+                <div class="dropdown" id="paperDrop">
+                    <button onclick="showMenu()" class="dropbtn"></button>
+                    <div id="myDropdown" class="dropdownContent">
+                        <a href="#" onclick="">Delete</a>
+                    </div>
+                </div>
                 <form>
                     <input type="text" id="inputTitle" placeholder="Add a title" onfocus="this.placeholder = ''"
                         onblur="this.placeholder = 'Add a title'">
                     <textarea id="content" placeholder="Start writing here" onfocus="this.placeholder = ''"
                         onblur="this.placeholder = 'Start writing here'"></textarea>
                 </form>
+                <select name="selectCat" class="selectCat" id="selectCat">
+                    
+                </select>
                 <button id="save">Save</button>
             </div>
         </section>
     </main>
-    <footer class="footer container">Footer</footer>
+    <footer class="footer container">
+    </footer>
+
+    <div class='dropdown'>
+        <button class='dropbtnList' onclick='showMenuList()'></button>
+        <div class='dropdownContent' id="">
+            <a href='#' onclick='deleteNote()'>Delete</a>
+        </div>
+    </div>
 </body>
 </html>
+<script type="text/javascript">
+    
+    const URL = "https://127.0.0.1/Notes/back/public/index.php/api/";
+    
+    var token = localStorage.getItem('token');
+    var email = localStorage.getItem('user');
+    var saveBtn = document.getElementById('save');
+    var addCatBtn = document.getElementById('addCat');
+    var addNoteBtn = document.getElementById('addNote');
+    var userName = document.getElementById('user');
+    var inputTitle = document.getElementById('inputTitle');
+    var inputContent = document.getElementById('content'); 
+    var selectCat = document.getElementById('selectCat');
+    var selectCatList = document.getElementById('selectCatList');
+    var catList = document.getElementById("categoriesList");
+    var notesList = document.getElementById('notesList');
+    var notes = [];
+
+    // GENERAL
+    window.onload = function () {
+        if (token != null) {
+            userName.innerHTML = email;
+            getNotes();
+            getCategories();
+        } else {
+            window.location.href = "login.html";
+        }
+    }
+
+    window.onclick = function (event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    const sendHttpRequest = (method, url, data) => {
+        const promise = new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+            xhr.responseType = 'json';
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Authorization', token);
+
+            xhr.onload = () => {
+                if (xhr.status >= 400) {
+                    reject(xhr.response);
+                } else {
+                    resolve(xhr.response);
+                }
+            };
+
+            xhr.onerror = () => {
+                reject('httprequest failed');
+                console.log(token);
+                //window.location.href = 'error.html';
+            };
+
+            xhr.send(JSON.stringify(data));
+        });
+        return promise;
+    };
+
+    const logOut = () => {
+
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+    }
+    
+    function showMenu() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function showMenuList(id) {
+        document.getElementById(id).classList.toggle("show");
+    }
+    
+    // CRUD NOTES
+    const getNotes = () => {
+        sendHttpRequest('GET', URL + 'note')
+        .then(responseData => {
+            notes = responseData['notes'];
+            showNotes(responseData['notes']);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
+
+    const showNotes = (notes) => {
+        
+        for (i = 0; i < notes.length; i++) {
+            listItem = document.createElement('li');
+            listItem.innerHTML = "<a onclick='selectNote("+ i +")'><p class='noteName'>" + notes[i]['title'] + "</p><p class='notePreview'>" + notes[i]['content'] + "</p></a><div class='dropdown'><button class='dropbtn' onclick='showMenuList(" + notes[i]['id'] + ")'></button><div class='dropdownContent' id=" + notes[i]['id'] + "><a href='#' onclick='deleteNote(" + notes[i]['id'] + ")'>Delete</a></div></div>";
+            notesList.appendChild(listItem);
+        }
+    }
+
+    const storeNote = () => {
+        sendHttpRequest('POST', URL + 'note', {
+            title: inputTitle.value,
+            content: inputContent.value,
+            category_id: selectCat.options[selectCat.selectedIndex].value,
+        }).then(responseData => {;
+            location.reload();
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
+    saveBtn.addEventListener('click', storeNote);
+
+    const deleteNote = (id) => {
+        sendHttpRequest('DELETE', URL + 'note/'+ id)
+            .then(responseData => {
+                console.log(responseData);
+                location.reload();
+            }).catch(err => {
+                console.log(err);
+            });
+    }
+
+    const selectNote = (index) => {
+        inputTitle.value = notes[index]['title'];
+        inputContent.value = notes[index]['content'];
+    }
+    
+    //CRUD CATEGORIES
+    const getCategories = () => {
+        sendHttpRequest('GET', URL + 'category')
+            .then(responseData => {
+                showCategories(responseData['title'], responseData['IDs']);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        };
+
+    const addCat = () => {
+        element = document.createElement('li');
+        element.innerHTML = '<input type="text" class="inputNewCategory" onkeydown="search(this)"/>'
+        input = element.innerHTML;
+        catList.append(element);
+    }
+
+    addCatBtn.addEventListener('click', addCat);  
+
+    function search(ele) {
+        if (event.key === 'Enter') {
+            storeCategory(ele.value);
+        }
+    }
+
+    const storeCategory = (title) => {
+
+        sendHttpRequest('POST', URL + 'category', {
+            title: title,
+        }).then(responseData => {
+            console.log(responseData);
+            location.reload();
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+    
+    const showCategories = (categories, ids) => {
+
+        for (i = 0; i < categories.length; i++) {
+            item = document.createElement('option');
+            item.setAttribute('value', ids[i]);
+            item.innerHTML = categories[i];
+            selectCat.appendChild(item);
+        }
+
+        for (i = 0; i < categories.length; i++) {
+            item = document.createElement('option');
+            item.setAttribute('value', ids[i]);
+            item.innerHTML = categories[i];
+            selectCatList.appendChild(item);
+        }
+
+        for (i = 0; i < categories.length; i++) {
+            listItem = document.createElement('li');
+            listItem.innerHTML = "<a><p class='catTitle'>" + categories[i] + "</p></a><div class='dropdown'><button class='dropbtn' onclick='showMenuList(" + categories[i]['id'] + ")'></button><div class='dropdownContent' id=" + categories[i]['id'] + "><a href='#' onclick='deleteNote(" + categories[i]['id'] + ")'>Delete</a></div></div>";
+            catList.appendChild(listItem);
+        }
+    }  
+
+    const addNote = () => {
+        inputTitle.value = '';
+        inputContent.value = '';
+    }
+
+    addNoteBtn.addEventListener('click', addNote);
+</script>

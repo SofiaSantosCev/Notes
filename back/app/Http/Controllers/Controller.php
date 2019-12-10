@@ -56,8 +56,7 @@ class Controller extends BaseController
         ],$code);
     }
 
-    private static function decodeToken() 
-    {
+    private static function decodeToken() {
         $headers = getallheaders();
 
         if(isset($headers['Authorization']))

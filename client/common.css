@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway|Roboto&display=swap');
 
+
 html {
     font-family:'Roboto', sans-serif;
 }
@@ -24,4 +25,5 @@ input {
 
 ul {
     list-style-type: none;
+    padding: 0;
 }
