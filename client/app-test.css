@@ -12,7 +12,7 @@ textarea {
     border: none;
     height: 60vh; 
     width: 100%;
-    margin-top: 120px;
+    top: 70px;
     position: absolute;
     resize: none;
 }
@@ -111,14 +111,7 @@ button, select {
 #paperDrop.dropdown {
     position: absolute;
     right: 0;
-    top: 0;
-    margin-right: 20px;
-    margin-top: 30px;
-}
-
-.dropdown {
-    position: relative;
-    display: inline-block;
+    top: 25%;
 }
 
 .dropdownContent {
@@ -153,6 +146,10 @@ div.headerList::after {
     height: 100px;
 }
 
+div.headerList {
+    height: 30px;
+}
+
 .headerList h4, .headerList div  {
     clear: none;
     float: left;
@@ -164,30 +161,47 @@ div.headerList::after {
     width: 75%;
 }
 
+.headerList div {
+    margin-left: 10px;
+}
+
 .headerList div button {
     background-image: url('assets/add.svg');
     width: 20px;
     height: 20px;
-    top: 10px;
 }
 
 .sidebarList {
     max-height: 300px;
-    overflow: hidden;
     width: 100%;
     overflow-y: scroll;
+    margin-top: 10px;
 }
 
-#notesList li {
-    min-height: 50px;
-    padding: 2px;
+.sidebarList li {
+    height: 50px;
 }
-
-#notesList li a {
+.sidebarList li a {
     float: left;
+    height: 50px;
     width: 80%;
-    min-height: 50px;
-    padding: 2px;
+    padding-left: 5px;
+}
+
+.sidebarList li div.dropdown-container {
+    position: relative;
+    float: left;
+    height: 50px;
+    width: 16%;
+}
+
+.sidebarList li div div.dropdown {
+    position: relative;
+    position: absolute;
+    display: inline-block;
+    left: 50%;
+    margin-left: -25%;
+    top: 25%;
 }
 
 #logo {
@@ -207,19 +221,40 @@ div.headerList::after {
     box-shadow: 0px 0px 20px 2px rgba(0,0,0,1);
 }
 
+#paperHeader {
+    position: relative;
+    position: absolute;
+    width: 90%;
+    height: 30px;
+    top: 0;
+    margin-top: 15px;
+}
+
 #paper form { 
     position: relative; 
 }
 
+div#lastUpdateDate {
+    position: absolute;
+}
+
+div#lastUpdateDate p {
+    font-size: .8rem;
+    color: #afafaf;
+    float: left;
+    margin-right:5px;
+}
+
 #inputTitle {
     height: 30px;
-    margin-top: 40px;
+    margin-top: 20px;
     position: absolute;
     top: 0;
     font-size: 30px;
     width: 100%;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
+    padding: 0;
 }
 
 #inputTitle::placeholder {
@@ -256,7 +291,6 @@ button#logOut {
 
 
 #selectCatList {
-    margin-top: 15px;
     width: 90%;
 }
 

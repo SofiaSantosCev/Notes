@@ -60,7 +60,7 @@ class UserController extends Controller
     {   
         $email = $request->input('email');
         $password = $request->input('password');
-
+        
         if (Validator::isStringEmpty($email) || Validator::isStringEmpty($password)) {
             return parent::response("All fields have to be filled", 400);
         }

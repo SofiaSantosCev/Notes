@@ -159,7 +159,7 @@
         notesList = document.getElementById('notesList');
         for (i = 0; i < notes.length; i++) {
             listItem = document.createElement('li');
-            listItem.innerHTML = "<a onclick='selectNote("+ notes[i]['title'] + ","+ notes[i]['content'] + ")'><p class='noteName'>" + notes[i]['title'] + "</p><p class='notePreview'>" + notes[i]['content'] + "</p></a><div class='dropdown'><button class='dropbtnList' onclick='showMenuList("+notes[i]['id']+")'></button><div class='dropdownContent' id="+ notes[i]['id'] +"><a href='#' onclick='deleteNote("+ notes[i]['id'] +")'>Delete</a></div></div >";
+            listItem.innerHTML = "<a onclick='selectNote("+ i + ")'><p class='noteName'>" + notes[i]['title'] + "</p><p class='notePreview'>" + notes[i]['content'] + "</p></a><div class='dropdown'><button class='dropbtnList' onclick='showMenuList("+notes[i]['id']+")'></button><div class='dropdownContent' id="+ notes[i]['id'] +"><a href='#' onclick='deleteNote("+ notes[i]['id'] +")'>Delete</a></div></div >";
             notesList.appendChild(listItem);
         }
     }
@@ -188,9 +188,9 @@
             });
     }
 
-    const selectNote = (title, content) => {
-        inputTitle.value = String(title);
-        inputContent.value = String(content);
+    const selectNote = (index) => {
+        inputTitle.value = notes[index]['title'];
+        inputContent.value = notes[index]['content'];
     }
     
     //CRUD CATEGORIES
