@@ -7,7 +7,7 @@
     <title>Notes</title>
     <link rel="stylesheet" href="common.css" type="text/css">
     <link rel="icon" type="image/png" href="assets/brain-white.svg">
-    <link href="app-test.css" type="text/css" rel="stylesheet"></link>
+    <link href="app.css" type="text/css" rel="stylesheet"></link>
 </head>
 <body>
     <header class="header container">
@@ -24,28 +24,41 @@
                         <button id="addNote" class="addBtn"></button>
                     </div>
                 </div>
+                <select name="selectCatList" onchange="selectVal()" class="selectCat" id="selectCatList">
+                    <option value="0">All</option>
+                </select>
                 <ul id="notesList" class="sidebarList">
                     <!-- dynamic list -->
                 </ul>
             </div>
             <div id="categoriesSection">
                 <div class="headerList">
-                    <h4>Your categories</h4>
+                    <h4>Your Categories</h4>
                     <div>
                         <button id="addCat" class="addBtn"></button>
                     </div>
                 </div>
                 <ul id="categoriesList" class="sidebarList">
+            
+                </ul>
+                <ul id="catList">
 
                 </ul>
-            </div> 
+            </div>
+            
         </aside>
         <section class="main container">
             <div id="paper">
-                <div class="dropdown" id="paperDrop">
-                    <button onclick="showMenu()" class="dropbtn" id="paperMenu"></button>
-                    <div id="myDropdown" class="dropdownContent">
-                        <a href="#">Delete</a>
+                <div id="paperHeader">
+                    <div class="dropdown" id="paperDrop">
+                        <button onclick="showMenu()" class="dropbtn"></button>
+                        <div id="myDropdown" class="dropdownContent">
+                            <a href="#" onclick="">Delete</a>
+                        </div>
+                    </div>
+                    <div id="lastUpdateDate">
+                        <p id="lastUpdate">Last update:</p>
+                        <p id="date"></p>
                     </div>
                 </div>
                 <form>
@@ -54,7 +67,7 @@
                     <textarea id="content" placeholder="Start writing here" onfocus="this.placeholder = ''"
                         onblur="this.placeholder = 'Start writing here'"></textarea>
                 </form>
-                <select name="selectCat" id="selectCat">
+                <select name="selectCat" class="selectCat" id="selectCat">
                     
                 </select>
                 <button id="save">Save</button>
@@ -66,7 +79,9 @@
 </body>
 </html>
 <script type="text/javascript">
+    
     const URL = "https://127.0.0.1/Notes/back/public/index.php/api/";
+    
     var token = localStorage.getItem('token');
     var email = localStorage.getItem('user');
     var saveBtn = document.getElementById('save');
@@ -76,14 +91,24 @@
     var inputTitle = document.getElementById('inputTitle');
     var inputContent = document.getElementById('content'); 
     var selectCat = document.getElementById('selectCat');
-    var catList = document.getElementById("categoriesList");
+    var selectCatList = document.getElementById('selectCatList');
+    var categoriesList = document.getElementById("categoriesList");
+    var catList = document.getElementById("catList");
+    var notesList = document.getElementById('notesList');
+    var notes = [];
+    var categories = [];
+    var idNoteSelected = null;
+    var date = document.getElementById('date'); 
+    var selectedIndex = 0;
+    var filterNotes = [];
 
-    // GENERAL
+    // EVERYTIME THE PAGE LOADS
     window.onload = function () {
         if (token != null) {
             userName.innerHTML = email;
             getNotes();
             getCategories();
+            
         } else {
             window.location.href = "login.html";
         }
@@ -136,48 +161,93 @@
         window.location.href = 'login.html';
     }
     
+    // Boolean showing paper dropdown
     function showMenu() {
         document.getElementById("myDropdown").classList.toggle("show");
     }
 
+    //Boolean showing individual dropdowns from the list
     function showMenuList(id) {
         document.getElementById(id).classList.toggle("show");
     }
     
-    // CRUD NOTES
+    // Function triggered when select category changes
+    function selectVal() {
+        selectedIndex = selectCatList.value;
+        filter(notes);
+    }
+
+    // GET NOTES
     const getNotes = () => {
         sendHttpRequest('GET', URL + 'note')
         .then(responseData => {
-            showNotes(responseData['notes']);
+            notes = responseData['notes'];
+            showNotes(notes);
+            console.log(notes);
         })
         .catch(err => {
             console.log(err);
         });
     };
 
+    function filter(notes) {
+        notesList.innerHTML= "";
+        if(selectCatList.value == 0) {
+            filterNotes = notes;
+        } else {
+            filterNotes = notes.filter(note => note['category_id'] == selectCatList.value);
+        }
+        showNotes(filterNotes);
+    }
+
     const showNotes = (notes) => {
-        notesList = document.getElementById('notesList');
-        for (i = 0; i < notes.length; i++) {
+        for (i = 0; i < notes.length; i++) {  
             listItem = document.createElement('li');
-            listItem.innerHTML = "<a onclick='selectNote("+ i + ")'><p class='noteName'>" + notes[i]['title'] + "</p><p class='notePreview'>" + notes[i]['content'] + "</p></a><div class='dropdown'><button class='dropbtnList' onclick='showMenuList("+notes[i]['id']+")'></button><div class='dropdownContent' id="+ notes[i]['id'] +"><a href='#' onclick='deleteNote("+ notes[i]['id'] +")'>Delete</a></div></div >";
+            listItem.innerHTML = "<a class='listItem' onclick='selectNote(" + i + ")'><p class='noteName'>" + notes[i]['title'] + "</p></a><div class='dropdown-container'><div class='dropdown'><button class='dropbtn' onclick='showMenuList(" + notes[i]['id'] + ")'></button><div class='dropdownContent' id=" + notes[i]['id'] + "><a href='#' onclick='deleteNote(" + notes[i]['id'] + ")'>Delete</a></div></div></div>";
             notesList.appendChild(listItem);
         }
     }
 
+    const postOrPut = (id) => {
+        if(id == null) {
+            storeNote();
+        } else {
+            updateNote(id);
+        }
+    }
+
+    // PUT /notes/id
+    const updateNote = (id) => {
+        sendHttpRequest('PUT', URL + 'note/' + id, {
+            title: inputTitle.value,
+            content: inputContent.value,
+            category_id: selectCat.value,
+        }).then(responseData => {
+            location.reload();
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
+    // POST /notes
     const storeNote = () => {
         sendHttpRequest('POST', URL + 'note', {
             title: inputTitle.value,
             content: inputContent.value,
             category_id: selectCat.options[selectCat.selectedIndex].value,
-        }).then(responseData => {;
+        }).then(responseData => {
             location.reload();
         }).catch(err => {
             console.log(err);
         });
     }
 
-    saveBtn.addEventListener('click', storeNote);
+    saveBtn.addEventListener('click', function() {
+        postOrPut(idNoteSelected);
+        console.log(idNoteSelected);
+    });
 
+    // DELETE /notes
     const deleteNote = (id) => {
         sendHttpRequest('DELETE', URL + 'note/'+ id)
             .then(responseData => {
@@ -188,16 +258,27 @@
             });
     }
 
+    // Shows selected notes from the list in the paper
     const selectNote = (index) => {
         inputTitle.value = notes[index]['title'];
         inputContent.value = notes[index]['content'];
+        idNoteSelected = notes[index]['id'];
+        date.innerHTML = notes[index]['updated_at'];
+        selectCat.value = notes[index]['category_id'];
+        console.log("259 id note selected: " + idNoteSelected);
     }
     
-    //CRUD CATEGORIES
+    const addNote = () => {
+            inputTitle.value = '';
+            inputContent.value = '';
+        }
+    
+    // CRUD CATEGORIES
     const getCategories = () => {
         sendHttpRequest('GET', URL + 'category')
             .then(responseData => {
-                showCategories(responseData['title'], responseData['IDs']);
+                categories = responseData['title'];
+                showCategories(categories, responseData['IDs']);
             })
             .catch(err => {
                 console.log(err);
@@ -211,14 +292,40 @@
         catList.append(element);
     }
 
+    const modifyCat = (index , id) => {
+        element = document.createElement('li');
+        element.innerHTML = '<input type="text" class="inputNewCategory" onkeydown="searchModify(this, '+ id +')" value='+ categories[index] +'/>';
+        console.log(categories);
+        input = element.innerHTML;
+        catList.append(element);
+    }
+
+    // PUT /category/id
+    const updateCat = (title, id) => {
+        sendHttpRequest('PUT', URL + 'category/' + id, {
+            title: title,
+        }).then(responseData => {
+            location.reload();
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+    
     addCatBtn.addEventListener('click', addCat);  
 
-    function search(ele) {
+    function search(input) {
         if (event.key === 'Enter') {
-            storeCategory(ele.value);
+            storeCategory(input.value);
         }
     }
 
+    function searchModify(input, id) {
+        if(event.key === 'Enter') {
+            updateCat(input.value, id);
+        }
+    }
+
+    // POST /category/id
     const storeCategory = (title) => {
 
         sendHttpRequest('POST', URL + 'category', {
@@ -234,24 +341,38 @@
     const showCategories = (categories, ids) => {
 
         for (i = 0; i < categories.length; i++) {
-            listItem = document.createElement('li');
-            listItem.innerHTML = "<a onclick='selectCategory(" + categories[i] + ")'><p class='catTitle'>" + categories[i] + "</p></a>";
-            catList.appendChild(listItem);
+            item = document.createElement('option');
+            item.setAttribute('value', ids[i]);
+            item.innerHTML = categories[i];
+            selectCat.appendChild(item);
         }
 
         for (i = 0; i < categories.length; i++) {
             item = document.createElement('option');
             item.setAttribute('value', ids[i]);
             item.innerHTML = categories[i];
-            selectCat.appendChild(item);
+            selectCatList.appendChild(item);
+        }
+
+        for (i = 0; i < ids.length; i++) {
+            listItem = document.createElement('li');
+            listItem.innerHTML = "<a class='listItem'><p class='catTitle'>" + categories[i] + "</p></a><div class='dropdown-container'><div class='dropdown'><button class='dropbtn' onclick='showMenuList(" + ids[i] + ")'></button><div class='dropdownContent' id=" + ids[i] + "><a href='#' onclick='deleteCategory(" + ids[i] + ")'>Delete</a><a href='#' onclick='modifyCat(" + i +","+ ids[i]+")'>Modify</a></div></div></div>";
+            categoriesList.appendChild(listItem);
         }
     }  
 
-    const addNote = () => {
-        inputTitle.value = '',
-        inputContent.value = '' 
-        console.log("addNote click");
+    // DELETE /category
+    const deleteCategory = (id) => {
+
+        sendHttpRequest('DELETE', URL + 'category/' + id)
+            .then(responseData => {
+                console.log(responseData);
+                location.reload();
+            }).catch(err => {
+                console.log(err);
+            });
     }
 
     addNoteBtn.addEventListener('click', addNote);
+
 </script>

@@ -122,8 +122,8 @@ button.ghost {
 }
 
 .overlay {
-    background: #F2B366;
-    background: linear-gradient(to left, #F27983, #A784D9) no-repeat 0 0 / cover;
+    
+    background-image: linear-gradient( 109.9deg,  rgba(237,55,70,1) 4.1%, rgba(248,0,81,1) 97% );
     color: white;
     position: relative;
     left: -100%;

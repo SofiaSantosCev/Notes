@@ -108,21 +108,20 @@ class CategoryController extends Controller
         }
         
         //creo una variable de la que se extrae el body de una petición POST/PUT/PATCH
-        parse_str(file_get_contents("php://input"),$putData);   
-        $name = $putData['name'];
+        $title = $request['title'];
         $user = parent::getUserFromToken();
         $user_id = $user->id;  
         
-        if (Validator::isStringEmpty($name)) 
+        if (Validator::isStringEmpty($title)) 
         {
             return parent::response('Los campos no pueden estar vacios', 400);
         }
         
-        if (!Validator::hasOnlyOneWord($name)) {
+        if (!Validator::hasOnlyOneWord($title)) {
             return parent::response('El nombre debe contener una unica palabra.', 400);
         }
         
-        if (Validator::exceedsMaxLength($name, 50)) {
+        if (Validator::exceedsMaxLength($title, 50)) {
             return parent::response('Nombre demasiado largo.', 400);
         }      
         
@@ -131,14 +130,14 @@ class CategoryController extends Controller
         
         /*En caso de que el nombre introducido sea el mismo que el que se pretende cambiar no se tendrá en cuenta como categoría 
         repetida y se obviará */
-        if (self::isCategoryNameInUse($name, $user->id) and $category->name != $name)
+        if (self::isCategoryNameInUse($title, $user->id) and $category->title != $title)
         {
             return parent::response('La categoría ya existe.', 400);     
         }
 
-        $category->name = $name;
+        $category->title = $title;
         $category->update();
-        return parent::response('Categoria modificada.', 201);
+        return parent::response('Categoria modificada.', 200);
         
     }
 

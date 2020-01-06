@@ -28,6 +28,7 @@ class NotesController extends Controller
         ], 200);
     }
 
+    // Creates new Note 
     public function store(Request $request){
         
         if (parent::checkLogin() == false) 
@@ -51,25 +52,83 @@ class NotesController extends Controller
 
         $user_id = $user->id;
 
-        $newNote = new Note;
+        DB::beginTransaction();
+
+        try {
+            $newNote = new Note;
         
-        $newNote->title = $title;
-        $newNote->content = $content;
-        $newNote->user_id = $user_id;
-        $newNote->category_id = $category_id;
+            $newNote->title = $title;
+            $newNote->content = $content;
+            $newNote->user_id = $user_id;
+            $newNote->category_id = $category_id;
 
-        $newNote->save();
+            $newNote->save();
+            return parent::response('Note created successfully', 200);
+        } catch(Exception $e) {
 
-        return parent::response('Note created successfully', 200);
+        }
+        
     }
 
-    public function update(Request $request, Note $note){
-        
+    // Modifies a specific note
+    public function update(Request $request, $id)
+    {
+        if (parent::checkLogin() == false) 
+        {
+            return response("No permissions", 301);
+        }
+
+        $title = $request['title'];
+        $content = $request['content'];
+        $category_id = $request['category_id'];
+
+        if (!isset($title) or !isset($content)) 
+        {
+            return parent::response('You cannot leave any blank', 400);
+        }
+
+        $user = parent::getUserFromToken();
+        $user_id = $user->id; 
+
+        DB::beginTransaction();
+
+        try {
+
+            $note = Note::where('id', $id)->first();
+    
+            $note->title = $title;
+            $note->content = $content;
+            $note->category_id = $category_id;
+    
+            $note->update();
+    
+            DB::commit();
+            return parent::response("Note updated", 200);
+
+        } catch(Exception $e) {
+            DB::rollback();
+            return parent::response('Something went wrong', 500);
+        }
+
     }
 
-    public function destroy($id){
-        $note = Note::where('id',$id)->first();
-        $note->delete();
-        return parent::response('Note deleted', 201);
+    // Deletes a specific note
+    public function destroy($id)
+    {
+        if(!parent::checkLogin()) {
+            return parent::response('You need to login to delete the account', 301);
+        }
+
+        $note = Note::where('id', $id)->first();
+
+        DB::beginTransaction();
+
+        try {
+            $note->delete();
+            return parent::response('Note deleted', 201);
+        } catch(Exception $e) {
+            DB::rollback();
+            return parent::response('Something went wrong', 500);
+        }
     }
 }

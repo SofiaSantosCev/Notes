@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use \Firebase\JWT\JWT;
 use App\Validator;
 use App\User;
+use DB;
 use Hash;
 
 class UserController extends Controller
@@ -13,49 +14,61 @@ class UserController extends Controller
     const ID_ROLE = 2;
     const TOKEN_KEY = 'bHH2JilqwA3Yx0qwn';
     
-
     public function index() {
         
     }
 
+    // Creates a new user and give's him access to the app
     public function store(Request $request)
     {
+        // Getting user information from input
         $name = $request->input('name');
         $email = $request->input('email');
         $password = $request->input('password');
 
+        // Validation of input
         if(!isset($name) && !isset($email) && !isset($password)) {
-            return parent::response('Input information wrong', 400);
+            return parent::response('Missing input information', 400);
         }
 
         if(self::isEmailInUse($email))
         {
-            return parent::response('This email belongs to another account', 400);
+            return parent::response('This email belongs to an existing account', 400);
         }
 
-        $user = new User;
-        
-        $user->name = $name;
-        $user->email = $email;
-        $user->password = password_hash($password, PASSWORD_DEFAULT);
-        $user->role_id = self::ID_ROLE;
-        
-        $user->save();
-        
-        $user = User::where('email', $email)->first();  
-        $id = $user->id;
-        $role_id = $user->role_id;
-        $token = self::generateToken($email, $password);
-        
-        return response()->json([
-            'token' => $token,
-            'user_id'=> $id, 
-            'role_id' => $role_id,
-            'email' => $email
-        ]);
+        DB::beginTransaction();
+
+        try {
+            //Create a new user
+            $user = new User();
+            $user->name = $name;
+            $user->email = $email;
+            $user->password = password_hash($password, PASSWORD_DEFAULT);
+            $user->role_id = self::ID_ROLE;
+            $user->save();
+
+            DB::commit();
+
+            // Creating a token for the user and giving him access to the app
+            $user = User::where('email', $email)->first();  
+            $id = $user->id;
+            $role_id = $user->role_id;
+            $token = self::generateToken($email, $password);
+            
+            return response()->json([
+                'token' => $token,
+                'user_id'=> $id, 
+                'role_id' => $role_id,
+                'email' => $email
+            ]);
+
+        } catch(Exception $e) {
+            DB::rollback();
+            return parent::response('Something went wrong!', 301);
+        }
     }
 
-    // User login
+    // User login with token
     public function login(Request $request)
     {   
         $email = $request->input('email');
@@ -89,6 +102,7 @@ class UserController extends Controller
         }
     }
 
+    // Creates a token with the user's information
     protected function generateToken($email, $password)
     {
         $dataToken = [
@@ -101,6 +115,7 @@ class UserController extends Controller
         return $token;
     }
 
+    // Checks if the given email belongs to an existing account
     private function isEmailInUse($email)
     {
         $users = User::where('email', $email)->get();
@@ -112,15 +127,27 @@ class UserController extends Controller
             }
         } 
     }
-
+    
+    // Deletes token's user from the database
     public function destroy()
     {
         if (parent::checkLogin())
         {
-            $user = parent::getUserFromToken();
-            $user->delete();
-            
-            return parent::response('Account deleted successfully.', 200);
+            try {
+
+                DB::beginTransaction();
+    
+                $user = parent::getUserFromToken();
+                $user->delete();
+                
+                DB::commit();
+    
+                return parent::response('Account deleted successfully.', 200);
+            } catch(Exception $e){
+
+                DB::rollback();
+                return parent::response('Something went wrong', 500);
+            }
         } else {
             return parent::response('You need to login to delete the account.', 301);
         }
